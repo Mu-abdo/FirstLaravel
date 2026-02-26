@@ -1,5 +1,6 @@
 <?php
 
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\FatoraController;
 use Illuminate\Support\Facades\Route;
@@ -24,8 +25,9 @@ Route::get('/',[FatoraController::class, 'index'])->middleware('auth');
 
 Route::get('fillup', [CrudController::class, 'getOffers']);
 
-Route::group(['prefix' => 'offers'], function(){
-    // Route::get('store', [CrudController::class, 'store']);
-    Route::get('create', [CrudController::class, 'createOffer']);
-    Route::post('store', [CrudController::class, 'store'])->name('offers.store');
+Route::group(['prefix' => laravelLocalization::setLocale(), 'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]], function() {
+    Route::group(['prefix' => 'offers'], function(){
+        Route::get('create', [CrudController::class, 'createOffer']);
+        Route::post('store', [CrudController::class, 'store'])->name('offers.store');
+    });
 });

@@ -22,23 +22,62 @@
         </style>
     </head>
     <body class="antialiased">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                        <li class="nav-item">
+                            <a rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                {{ $properties['native'] }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                </div>
+            </div>
+        </nav>
 
-        <h1 class="text-center">Create Offer</h1>
-        <div class="container">
+        <h1 class="text-center">{{__('messages.title_of_offers')}}</h1>
+        <div class="container m-auto">
+
+            @if (Session::has('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ Session::get('success') }}
+                </div>
+            @endif
+
             <form method="POST" action="{{route('offers.store')}}">
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">Offer Name</label>
                     <input type="text" class="form-control" id="exampleInputEmail1" name="name">
                     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    @error('name')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Offer Price</label>
                     <input type="text" class="form-control" name="price" id="exampleInputPassword1">
+                     @error('price')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Offer Details</label>
                     <input type="text" class="form-control" name="details" id="exampleInputPassword1">
+                    @error('details')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
