@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\OfferRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Offer;
 
@@ -32,14 +32,7 @@ class CrudController extends Controller
         return view('create');
     }
 
-    public function store(Request $request){
-        $rules = $this -> getRules();
-        $message = $this -> getMessage();
-
-        $validator = validator::make($request->all(), $rules, $message);
-        if($validator -> fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all);
-        }
+    public function store(OfferRequest $request){
 
         Offer::create([
             'name'=> $request->name,
@@ -49,20 +42,9 @@ class CrudController extends Controller
         return redirect()->back()->with(['success'=>'تم اضافه العرض بنجاح']);
     }
 
-    public function getRules(){
-        return $rules = [
-            'name' => 'required|max:500|unique:offers,name',
-            'price' => 'required|numeric',
-            'details' => 'required',
-        ];
+    public function getOfferAll(){
+        $Offers = Offer::select('id','name','price','details')->get();
+        return view('alloffers', compact('Offers'));
     }
-    public function getMessage(){
-        return $message = [
-            'name.required' => __('messages.offer_name_required'),
-            'name.unique' => 'العرض موجود سابقا',
-            'price.numeric' => 'مطلوب ارقام',
-            'price.required' => 'يرجي اضافه سعر للخصم',
-            'details.required' => 'يرجي اضافه تفاصيل',
-        ];
-    }
+
 }

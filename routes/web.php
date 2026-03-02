@@ -19,15 +19,21 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['verify'=>true]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home') ->middleware('verified');
 
-Route::get('/',[FatoraController::class, 'index'])->middleware('auth');
+Route::group(['prefix' => LaravelLocalization::setLocale(),
+'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ] ], function() {
 
-Route::get('fillup', [CrudController::class, 'getOffers']);
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home') ->middleware('verified');
 
-Route::group(['prefix' => laravelLocalization::setLocale(), 'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]], function() {
+    Route::get('/',[FatoraController::class, 'index'])->middleware('auth');
+
+    Route::get('fillup', [CrudController::class, 'getOffers']);
+
     Route::group(['prefix' => 'offers'], function(){
         Route::get('create', [CrudController::class, 'createOffer']);
         Route::post('store', [CrudController::class, 'store'])->name('offers.store');
-    });
+
+        });
+    Route::get('alloffers', [CrudController::class, 'getOfferAll']);
+
 });

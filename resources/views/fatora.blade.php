@@ -15,11 +15,11 @@
         @extends('layouts.app')
     </div>
 
-    <div class="card">
+    <div class="card" style="direction: {{ __('fatora.dir lang') }}">
 
         <div class="card-header">
             <div class="card-title">
-                <span>البيانات الأساسية</span>
+                <span>{{__('fatora.master data')}}</span>
                 <span class="info-icon">i</span>
             </div>
         </div>
@@ -68,7 +68,7 @@
     </div>
 
     {{-- card2 --}}
-    <div class="card">
+    <div class="card" style="direction: {{ __('fatora.dir lang') }}">
 
         <div class="card-header">
             <div class="card-title">
